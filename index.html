@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+            <link href="glyphicons.css" rel="stylesheet" />
+      <title>Javascript Quiz Project</title>
+      <style>
+            .col-sm-6 {
+                  border: solid 0px #D8D8D8;
+                  padding: 10px;
+                  
+            }
+.card{
+      background: rgb(242, 246, 250);
+}
+            .pageMovement {
+                  margin-top: 25px;
+            }
+
+            .answer {
+                  margin-left: auto;
+                  margin-right: auto;
+                  display: block;
+                  width: 80%;
+                  color:white;
+            }
+            .row {
+                  margin-right: -5px;
+                  margin-left: -5px;
+}
+            .container {
+                  border: solid 0px #D8D8D8;
+            }
+            .hide{
+                  display:none;
+            }
+            .show{
+                  display: block;
+            }
+            #finishQuiz {
+                  margin-top: 25px;
+            }
+            .output {
+                  font-size: 20px;
+            }
+            .glyphicon-ok-circle{
+                  color: #00FF64;
+            }
+            .glyphicon-remove-circle {
+                  color: #FF0004;
+            }
+            .selAnswer {
+                  background:rgb(223, 233, 226);
+            }
+            .progress{
+                  border-radius: 0rem;
+                  background-color: #43ac4a;
+            }
+            .progress-bar {
+                  height: .7rem;
+                  line-height: .7rem; 
+                  background-color: #169e25;
+            }
+            .btn-warning {
+                  color: rgb(248, 246, 246);
+                  background-color: #ffc107;
+                  border-color: #f6cf59;
+                  border-width: 3px;
+            }
+      </style>
+</head>
+
+<body>
+            <header id="main-header" class="bg-success text-white p-4">
+                        <div class="container">
+                          <div class="row">
+                            <div class="col-md-6">
+                    
+                              <h1 id="header-title">Welcome to my Quiz</h1>                    
+                            </div> 
+                            <div class="col-md-2 col-sm-offset-4 col-xs-offset-2  btn btn-warning btn-block hide float-right" id="finishQuiz" class="col-sm-offset-4 col-xs-offset-2  btn btn-warning btn-block hide float-right">
+                                                Submit Quiz
+                                                           
+                                  </div>                          
+                          </div> 
+                                               
+                        </div>
+                        
+                      </header>
+                      <div class="progress">
+                              <div id="progressBar" class="progress-bar progress-bar-success progress-bar-striped progress-bar-animated" role="progressbar"
+                                    aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:50%">
+                                    0% Complete
+                              </div>
+                        </div>
+                      
+      <div class="container">
+                  <div id="main" class="card card-body">
+            <div id="quizContent" class="row quiz">
+                  
+                        <div class="col-sm-12">
+                              <h2 id="quizHeader">What is addEventListener() used for ?</h2>
+
+                        </div>
+                  
+                  <div id = "questions" class="row">
+                        <div class="col-sm-6"><a data-id="1" class="btn btn-warning answer"></a>
+                        </div>
+                        <div class="col-sm-6"><a data-id="2" class="btn btn-warning answer"></a>
+                        </div>
+                        <div class="col-sm-6"><a data-id="3" class="btn btn-warning answer"></a>
+                        </div>
+                        <div class="col-sm-6"><a data-id="4" class="btn btn-warning answer"></a>
+                        </div>
+                  </div>
+            </div>
+
+            <div class="row pageMovement">
+                  <div id="btnPrevious" class="col-xs-4 col-sm-4 btn btn-success float-left">Previous</div>
+
+                  <div id="btnNext" class="col-xs-4 col-sm-4 col-sm-offset-4 col-xs-offset-4 btn btn-success float-right">Next</div>
+                  
+            </div>
+            <div class="row">
+                  <div id="finishQuiz" class="btn btn-success btn-block hide">
+                        Submit Quiz
+                  </div>
+                  <div id="restartQuiz" class="col-sm-4 btn col-sm-offset-4 btn-warning btn-block hide">
+                              <a href="index.html">Restart Quiz</a>
+                        </div>
+            </div>
+           
+        </div>    
+      </div>
+
+
+</body>
+
+</html>
+<script>
+      var correct = 0; 
+      var curPage = 0;
+      var myAnswers=[];
+      var myQuiz =[
+                        ["What is addEventListener() used for?",1,
+                        "Attach a click event", 
+                        "nothing",
+                        "never used it",
+                        "Listens to HTML" 
+                        ],
+                        ["What does DOM for?",1,
+                        "Document Object Model", 
+                        "Nothing",
+                        "Do Over Model",
+                        "Doc Over Mount"
+                        ],
+                        ["What does 3?",4,
+                        "it is 5", 
+                        "Nothing Special",
+                        "Some",
+                        "Mount"
+                        ]
+                  ]
+      
+      
+      var myQuestion = document.getElementById("questions");
+      var myHeader = document.getElementById("quizHeader");
+      var classname = document.getElementsByClassName("answer");
+      var btnPrevious = document.getElementById("btnPrevious");  
+      var btnNext = document.getElementById("btnNext");
+      var progressBar = document.getElementById("progressBar");
+      var btnFinish = document.getElementById("finishQuiz");
+      var btnRestart = document.getElementById("restartQuiz");
+      
+      // console.log(myQuestion.children[0]);
+      // console.log(myQuestion.children[1]);
+      // console.log(myQuestion.children[2]);
+      // console.log(myQuestion.children[3]);
+      checkPage();
+      
+
+      btnNext.addEventListener("click", moveNext);
+      btnPrevious.addEventListener("click", moveBack);
+      btnFinish.addEventListener("click", endQuiz);
+      //console.log(classname);
+      for (var i = 0; i < classname.length; i++) {
+            classname[i].addEventListener('click', myAnswer, false)
+      }
+
+      function myAnswer() {
+            var idAnswer = this.getAttribute("data-id");
+            myAnswers[curPage] =idAnswer; 
+            // if(myQuiz[curPage][1] == idAnswer) console.log("Correct");
+            // else console.log("Wrong");    
+            console.log(myAnswers);  
+            addBox();
+      }
+
+      function moveNext() {
+            if(myAnswers[curPage]){
+                  console.log("OK to proceed");
+                  if(curPage < (myQuiz.length - 1)){
+                        curPage++;    
+                        checkPage();
+                  } else if(curPage >=myQuiz.length ){
+                        endQuiz();                      
+                  }
+            }else {
+                  console.log("Not Answered");
+ }     }
+      function checkPage(){
+            if(curPage == 0){
+                  btnPrevious.classList.add("hide");
+            }else{
+                  btnPrevious.classList.remove("hide");
+            }
+            if((curPage+1)<myQuiz.length){
+                  btnNext.classList.remove("hide");
+            }else{
+                  btnNext.classList.add("hide");
+                  btnFinish.classList.remove("hide");
+            }
+            console.log(curPage +1);
+            myHeader.innerHTML = myQuiz[curPage][0];
+           // console.log("Question ::"+myQuiz[curPage][0]);
+            for(var i = 0; i < myQuestion.children.length; i++){
+                  var curNode = myQuestion.children[i];
+                 
+                  //console.log("curNode.childNodes[0].innerHTML "+myQuiz[curPage][i+2]);
+                  curNode.childNodes[0].innerHTML = capitalise(myQuiz[curPage][(i+2)]);
+                  if(myAnswers[curPage] == (i+1)){
+                        curNode.classList.add("selAnswer");
+                  }else {
+                        curNode.classList.remove("selAnswer");
+                        }
+                  }
+            
+            var increment = Math.ceil((curPage +1)/(myQuiz.length)* 100);
+            progressBar.style.width = (increment) +'%';
+            progressBar.innerHTML = (increment) +'%';
+           
+      }
+
+      function moveBack() {
+            if(curPage > 0){
+            curPage--;
+            checkPage();
+            }else {
+                  console.log("End of Quiz "+ curPage);
+            }
+
+      }
+      function capitalise(str){
+            return str.substr(0,1).toUpperCase() + str.substr(1);
+      }
+      function endQuiz(){
+            if (myAnswers[(myQuiz.length)-1]) {
+                  var output = "<div class='output'>Quiz Results<br>";
+                  var questionResult = "NA";
+                  console.log("Quiz Over");
+                  for (var i = 0; i < myAnswers.length; i++) {
+                        if (myQuiz[i][1] == myAnswers[i]) {
+                              questionResult =
+                                    '<span class = "glyphicon glyphicon-ok-circle" aria-hidden="true"></span>';
+                              correct++;
+                        } else {
+                              questionResult =
+                                    '<span class = "glyphicon glyphicon-remove-circle" aria-hidden="true"></span>';
+                        }
+                        output = output + '<p>Question ' + (i + 1) + ' ' + questionResult + '</p>';
+                  }
+                  output = output + '<p> You Scored ' + correct + ' out of ' + myQuiz.length + '</p></div>';
+                  document.getElementById("quizContent").innerHTML = output;
+                  btnPrevious.classList.add("hide");
+                  btnFinish.classList.add("hide");
+                  btnRestart.classList.remove("hide");
+                  
+            } else {
+                  console.log("Not Answered")
+            }
+      }
+      function addBox(){
+            for(var i = 0; i < myQuestion.children.length; i++){
+                  var curNode = myQuestion.children[i];
+                  if(myAnswers[curPage]==(i+1)){
+                        curNode.classList.add("selAnswer");
+                  }else {
+                        curNode.classList.remove("selAnswer");
+                  }
+            }
+      }
+</script>
